@@ -53,7 +53,7 @@
 
 #align(center, text(15pt)[
   Arthur Rabello Oliveira
-  #footnote[#link("https://emap.fgv.br/")[Escola de Matemática Aplicada, Fundação Getúlio Vargas (FGV/EMAp)], email: #link("mailto:arthur.oliveira.1@fgv.edu.br")], Henrique Coelho Beltrão #footnote[#link("https://emap.fgv.br/")[Escola de Matemática Aplicada, Fundação Getúlio Vargas (FGV/EMAp)], email: #link("email_do_hebrique@gmai.com")]
+  #footnote[#link("https://emap.fgv.br/")[Escola de Matemática Aplicada, Fundação Getúlio Vargas (FGV/EMAp)], email: #link("mailto:arthur.oliveira.1@fgv.edu.br")], Henrique Coelho Beltrão #footnote[#link("https://emap.fgv.br/")[Escola de Matemática Aplicada, Fundação Getúlio Vargas (FGV/EMAp)], email: #link("mailto:henrique.beltrao@fgv.edu.br")]
 
   #datetime.today().display("[day]/[month]/[year]")
 ])
