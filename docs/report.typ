@@ -45,7 +45,8 @@
 #let herm(arg) = $arg^*$
 #let transpose(arg) = $arg^T$
 #let inner(var1, var2) = $angle.l var1, var2 angle.r$
-
+#let Var(arg) = $"Var"(arg)$
+#let int = $integral$
 
 #align(center, text(20pt)[
  * Assignment 3 - Numerical Linear Algebra*
@@ -71,8 +72,148 @@
 = Introduction
 <section_introduction>
 
-= Norm Distribution
+= Norm Distribution (a)
 <section_norm_distribution>
+
+== The Chi-Square Distribution
+<section_chi_square_distribution>
+When we generate a matrix $A in RR^(m times n)$, with $A_( i j) ~ N(0, 1)$ independent, each column $c_i$ is a gaussian vector in $RR^m$. if
+
+$
+  x = vec(X_1, X_2, dots.v, X_m) in RR^m
+$
+
+Is a column, then:
+
+$
+  V = norm(x)_2 = sqrt(sum_(i=1)^m X_i^2)\
+  
+  V^2 = sum_(i=1)^m X_i^2
+$
+
+Is of our interest. The expected value and variance are:
+
+$
+  EE[V^2] = EE[sum_(i=1)^m X_i^2] = sum_(i=1)^m EE[X_i^2] = m\
+
+  Var(V^2) = Var(sum_(i=1)^m X_i^2) = sum_(i=1)^m Var(X_i^2) = 2m
+$
+
+But we know that if $X_i ~ N(0, 1)$ are independent:
+
+$
+  sum_(i = 1)^m X_i^2 ~ chi_m^2
+$ <equation_normal_sum_is_chi>
+
+where $chi_m$ is the chi-squared distribution with $m$ degreees of freedom, better discussed in @section_chi_square_distribution.
+
+Taking the square root on @equation_normal_sum_is_chi, we have:
+
+$
+  V = norm(x)_2 = sqrt(sum_(i=1)^m X_i^2) ~ sqrt(chi_m^2) ~ chi_m
+$
+
+The 2-norm of a vector $x$ is distributed as a chi distribution with $m$ degrees of freedom, in order to understand the distribution for many values of $m$, we can calculate the expected value and variance of this distribution as a function of $m$. The PDF of the chi distribution (with $m$ degrees of freedom) is:
+
+$
+  f_V (phi) = 1 / (2^(m / 2 - 1) dot Gamma(m / 2))  phi^(m - 1) e^(-phi^2 / 2)
+$ <PDF_chi>
+
+
+So from #link("https://proofwiki.org/wiki/Expectation_of_Chi_Distribution")[this], the expected value is:
+
+$
+  EE(V) = sqrt(2) dot Gamma((m + 1) / 2) / Gamma(m / 2)
+$ <expectation_chi>
+
+And from #link("https://proofwiki.org/wiki/Variance_of_Chi_Distribution")[this], the variance:
+
+$
+  Var(V) =
+  m - (sqrt(2) dot Gamma((m + 1) / 2) / Gamma(m / 2))^2
+$ <variance_chi>
+
+The #link("https://en.wikipedia.org/wiki/Stirling%27s_approximation#Stirling's_formula_for_the_gamma_function")[Stirling Approximation] provides a good approximation for the expected value and variance:
+
+$
+  EE(V) approx sqrt(m) dot (1 - 1 / (4 m) + O(1 / m^2))
+$
+
+$
+  Var(V) approx 1 / 2 + O(1 / m)
+$
+
+== Histograms
+<section_histograms>
+
+#link("https://github.com/arthurabello/nla-assignment-4/blob/main/src/assignment.ipynb")[The first cell of this notebook] has as expected output, with input being matrices with fixed $n = 1000$ and $m in {10, 20, 100, 200, 1000, 2000}$, the following plots:
+
+
+#figure(
+  image("images/histo_10_1000.png", width: 80%),
+  caption: [
+    $10 times 1000$ gaussian matrix
+  ]
+) <histo_10_1000>
+
+#figure(
+  image("images/histo_20_1000.png", width: 80%),
+  caption: [
+    $20 times 1000$ gaussian matrix
+  ]
+) <histo_20_1000>
+
+#figure(
+  image("images/histo_100_1000.png", width: 80%),
+  caption: [
+    $100 times 1000$ gaussian matrix
+  ]
+) <histo_100_1000>
+
+#figure(
+  image("images/histo_200_1000.png", width: 80%),
+  caption: [
+    $200 times 1000$ gaussian matrix
+  ]
+) <histo_200_1000>
+
+#figure(
+  image("images/histo_1000_1000.png", width: 80%),
+  caption: [
+    $1000 times 1000$ gaussian matrix
+  ]
+) <histo_1000_1000>
+
+#figure(
+  image("images/histo_2000_1000.png", width: 80%),
+  caption: [
+    $2000 times 1000$ gaussian matrix
+  ]
+) <histo_2000_1000>
+
+#table(
+  columns: (auto, auto, auto, auto, auto),
+  align: horizon,
+  inset: 6pt,
+  table.header(
+    [$m$],
+    [*approximate $mu_m$ (theory)*],
+    [*$[mu ± 3sigma]$ (theory)*],
+    [*observed spike*],
+    [*visual range*],
+  ),
+
+  [10],   [$3.08$],  [$1.0 - 5.18$],  [$approx 3.1$],          [$1.2 -5.1$],
+  [20],   [$4.42$],  [$2.3 - 6.52$],  [$approx 4.3 - 4.4$],      [$2.9 - 6.4$],
+  [100],  [$9.98$],  [$7.9 - 12.1$],  [$approx 9.9 - 10.0$],     [$7.8 - 12.0$],
+  [200],  [$14.12$], [$12.0 - 16.2$], [$approx 14.1$],         [$12.2 - 16.2$],
+  [1000], [$31.61$], [$29.5 - 33.7$], [$approx 31.7 - 32.0$],   [$29.9 - 33.3$],
+  [2000], [$44.72$], [$42.6 - 46.8$], [$approx 44.5 - 45.0$],   [$42.8 - 46.6$],
+)
+
+This table illustrates the expected value $mu_m$ and the range $[mu - 3sigma, mu + 3sigma]$ for @histo_10_1000 to @histo_2000_1000.
+
+So apparently as $m$ grows, the size of the gaussian vectors rapidly converge to $sqrt(m)$, with small errors.
 
 = Inner Products
 <section_inner_products>
