@@ -274,108 +274,30 @@ The following plots are an expected output for the second cell of #link("https:/
 ) <plot_inner_100_10>
 
 #figure(
-  image("images/inner_100_20.png", width: 100%),
-) <plot_inner_100_20>
-
-#figure(
-  image("images/inner_100_30.png", width: 100%),
-) <plot_inner_100_30>
-
-#figure(
-  image("images/inner_100_40.png", width: 100%),
-) <plot_inner_100_40>
-
-#figure(
   image("images/inner_100_50.png", width: 100%),
 ) <plot_inner_100_50>
 
-#figure(
-  image("images/inner_100_60.png", width: 100%),
-) <plot_inner_100_60>
-
-#figure(
-  image("images/inner_100_70.png", width: 100%),
-) <plot_inner_100_70>
-
-#figure(
-  image("images/inner_100_80.png", width: 100%),
-) <plot_inner_100_80>
-
-#figure(
-  image("images/inner_100_90.png", width: 100%),
-) <plot_inner_100_90>
 
 #figure(
   image("images/inner_100_100.png", width: 100%),
 ) <plot_inner_100_100>
 
-#figure(
-  image("images/inner_100_150.png", width: 100%),
-) <plot_inner_100_150>
 
 #figure(
   image("images/inner_100_200.png", width: 100%),
 ) <plot_inner_100_200>
 
 #figure(
-  image("images/inner_100_250.png", width: 100%),
-) <plot_inner_100_250>
-
-#figure(
-  image("images/inner_100_300.png", width: 100%),
-) <plot_inner_100_300>
-
-#figure(
-  image("images/inner_100_350.png", width: 100%),
-) <plot_inner_100_350>
-
-#figure(
   image("images/inner_100_400.png", width: 100%),
 ) <plot_inner_100_400>
-
-#figure(
-  image("images/inner_100_450.png", width: 100%),
-) <plot_inner_100_450>
 
 #figure(
   image("images/inner_100_500.png", width: 100%),
 ) <plot_inner_100_500>
 
 #figure(
-  image("images/inner_100_550.png", width: 100%),
-) <plot_inner_100_550>
-
-#figure(
-  image("images/inner_100_600.png", width: 100%),
-) <plot_inner_100_600>
-
-#figure(
-  image("images/inner_100_650.png", width: 100%),
-) <plot_inner_100_650>
-
-#figure(
   image("images/inner_100_700.png", width: 100%),
 ) <plot_inner_100_700>
-
-#figure(
-  image("images/inner_100_750.png", width: 100%),
-) <plot_inner_100_750>
-
-#figure(
-  image("images/inner_100_800.png", width: 100%),
-) <plot_inner_100_800>
-
-#figure(
-  image("images/inner_100_850.png", width: 100%),
-) <plot_inner_100_850>
-
-#figure(
-  image("images/inner_100_900.png", width: 100%),
-) <plot_inner_100_900>
-
-#figure(
-  image("images/inner_100_950.png", width: 100%),
-) <plot_inner_100_950>
 
 #figure(
   image("images/inner_100_1000.png", width: 100%),
