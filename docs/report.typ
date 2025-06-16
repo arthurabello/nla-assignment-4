@@ -77,6 +77,9 @@
 
 == The Chi-Square Distribution
 <section_chi_square_distribution>
+
+Here we construct a theoretical basis for our analysis of the histograms shown in @section_histograms 
+
 When we generate a matrix $A in RR^(m times n)$, with $A_( i j) ~ N(0, 1)$ independent, each column $c_i$ is a gaussian vector in $RR^m$. if
 
 $
@@ -215,8 +218,171 @@ This table illustrates the expected value $mu_m$ and the range $[mu - 3sigma, mu
 
 So apparently as $m$ grows, the size of the gaussian vectors rapidly converge to $sqrt(m)$, with small errors.
 
-= Inner Products
+= Inner Products (b)
 <section_inner_products>
+
+Here we construct a theoretical basis for our analysis of the inner products shown in @section_inner_product_histograms.
+
+When we generate a matrix $A in RR^(m times n)$, with $A_( i j) ~ N(0, 1)$ independent, each column $c_i$ is a gaussian vector in $RR^m$. If
+The inner product of two gaussian vectors $x = (X_1, dots, X_n), y = (Y_1, dots, Y_n)$ is:
+
+$
+  Z = inner(x, y) = sum_(i = 1)^m X_i Y_i 
+$
+
+With $X, Y ~ N(0, 1)$. Since $X_i, Y_j$ are independent, we have:
+
+$
+  EE[Z] = sum_(i = 1)^m EE[X_i Y_i] = sum_(i = 1)^m EE[X_i] EE[Y_i] = 0\
+  Var(Z) = sum_(i = 1)^m Var(X_i Y_i) = sum_(i = 1)^m EE[X_i^2] EE[Y_i^2] = sum_(i = 1)^m 1 = m
+$
+
+If $W = X_i Y_i$, we have:
+
+$
+  M_W (phi) = EE[e^(phi W)] = 1 / sqrt(1 - phi^2), abs(phi) < 1
+$
+
+Over all $W_i = X_i Y_i$:
+
+$
+  M_Z (phi) = EE[e^(phi Z)] = (M_W (phi))^m = (1 / sqrt(1 - phi^2))^m = (1 - phi^2)^(-m / 2), abs(phi) < 1
+$
+
+And magically:
+
+$
+  M_(Z / sqrt(m)) (phi) = (1 - phi^2 / m)^(-m / 2) => lim_(m -> oo) M_(Z / sqrt(m)) (phi) = e^(phi^2 / 2)
+$
+
+Precisely the moment generating function of a standard normal distribution, so as $m -> oo$:
+
+$
+  Z / sqrt(m) ~ N(0, 1)
+$
+
+With a fixed $m = 100$, when $n -> oo$ we can see the distribution approaching $N(0, 1)$, as shown in @section_inner_product_histograms
+
+
+== Histograms
+<section_inner_product_histograms>
+
+The following plots are an expected output for the second cell of #link("https://github.com/arthurabello/nla-assignment-4/blob/main/src/assignment.ipynb")[this notebook], with input $m = 100, n in {10, 20, 30, 40, 50, 60, dots, 1000}$:
+
+#figure(
+  image("images/inner_100_10.png", width: 100%),
+) <plot_inner_100_10>
+
+#figure(
+  image("images/inner_100_20.png", width: 100%),
+) <plot_inner_100_20>
+
+#figure(
+  image("images/inner_100_30.png", width: 100%),
+) <plot_inner_100_30>
+
+#figure(
+  image("images/inner_100_40.png", width: 100%),
+) <plot_inner_100_40>
+
+#figure(
+  image("images/inner_100_50.png", width: 100%),
+) <plot_inner_100_50>
+
+#figure(
+  image("images/inner_100_60.png", width: 100%),
+) <plot_inner_100_60>
+
+#figure(
+  image("images/inner_100_70.png", width: 100%),
+) <plot_inner_100_70>
+
+#figure(
+  image("images/inner_100_80.png", width: 100%),
+) <plot_inner_100_80>
+
+#figure(
+  image("images/inner_100_90.png", width: 100%),
+) <plot_inner_100_90>
+
+#figure(
+  image("images/inner_100_100.png", width: 100%),
+) <plot_inner_100_100>
+
+#figure(
+  image("images/inner_100_150.png", width: 100%),
+) <plot_inner_100_150>
+
+#figure(
+  image("images/inner_100_200.png", width: 100%),
+) <plot_inner_100_200>
+
+#figure(
+  image("images/inner_100_250.png", width: 100%),
+) <plot_inner_100_250>
+
+#figure(
+  image("images/inner_100_300.png", width: 100%),
+) <plot_inner_100_300>
+
+#figure(
+  image("images/inner_100_350.png", width: 100%),
+) <plot_inner_100_350>
+
+#figure(
+  image("images/inner_100_400.png", width: 100%),
+) <plot_inner_100_400>
+
+#figure(
+  image("images/inner_100_450.png", width: 100%),
+) <plot_inner_100_450>
+
+#figure(
+  image("images/inner_100_500.png", width: 100%),
+) <plot_inner_100_500>
+
+#figure(
+  image("images/inner_100_550.png", width: 100%),
+) <plot_inner_100_550>
+
+#figure(
+  image("images/inner_100_600.png", width: 100%),
+) <plot_inner_100_600>
+
+#figure(
+  image("images/inner_100_650.png", width: 100%),
+) <plot_inner_100_650>
+
+#figure(
+  image("images/inner_100_700.png", width: 100%),
+) <plot_inner_100_700>
+
+#figure(
+  image("images/inner_100_750.png", width: 100%),
+) <plot_inner_100_750>
+
+#figure(
+  image("images/inner_100_800.png", width: 100%),
+) <plot_inner_100_800>
+
+#figure(
+  image("images/inner_100_850.png", width: 100%),
+) <plot_inner_100_850>
+
+#figure(
+  image("images/inner_100_900.png", width: 100%),
+) <plot_inner_100_900>
+
+#figure(
+  image("images/inner_100_950.png", width: 100%),
+) <plot_inner_100_950>
+
+#figure(
+  image("images/inner_100_1000.png", width: 100%),
+) <plot_inner_100_1000>
+
+
+@plot_inner_100_10 $->$ @plot_inner_100_1000 shows that the distribution indeed approaches $N(0, 1)$
 
 = The Maximum Distribution
 <section_maximum_distribution>
