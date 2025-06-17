@@ -367,13 +367,17 @@ where $mu$ is the mode of the distribution (location parameter) and $beta$ is th
   image("images/max_corr_10000.png", width: 80%),
 ) <plot_max_corr_10000>
 
-The histograms generated, especially for large $K$ (e.g., $K=1000$ and $K=10000$ as shown in @plot_max_corr_1000 and @plot_max_corr_10000, respectively), exhibit the distinct features of a Gumbel distribution:
+#figure(
+  image("images/max_corr_100000.png", width: 80%)
+) <plot_max_corr_100000>
+
+The histograms generated, especially for large $K$ (e.g., $K=10000$ and $K=100000$ as shown in @plot_max_corr_10000 and @plot_max_corr_100000, respectively), exhibit the distinct features of a Gumbel distribution:
 - A single peak (unimodal).
 - Asymmetry with a more extended tail on the right side.
 
 As we can observe, growing $K$ _(number of trials)_ leads to a smoother plot and a clearer shape of the distribution, which aligns with the theoretical expectations of the Gumbel distribution.
 
-The observed mode of the distribution is around 0.43, which is consistent with theoretical predictions. The location parameter $mu$ can be approximated by:
+The observed mode of the distribution is around 0.42, which is consistent with theoretical predictions. The location parameter $mu$ can be approximated by:
 $
   mu approx sqrt((2 ln(N)) / m) = sqrt((2 ln(n(n-1)/2)) / m)
 $
