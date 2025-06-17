@@ -352,23 +352,23 @@ where $mu$ is the mode of the distribution (location parameter) and $beta$ is th
 <section_maximum_distribution_histograms>
 
 #figure(
-  image("images/max_corr_100.png", width: 80%),
+  image("images/max_corr_k100_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_100>
 
 #figure(
-  image("images/max_corr_500.png", width: 80%),
+  image("images/max_corr_k500_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_500>
 
 #figure(
-  image("images/max_corr_1000.png", width: 80%),
+  image("images/max_corr_k1000_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_1000>
 
 #figure(
-  image("images/max_corr_10000.png", width: 80%),
+  image("images/max_corr_k10000_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_10000>
 
 #figure(
-  image("images/max_corr_100000.png", width: 80%)
+  image("images/max_corr_k100000_m100_x_n300.png", width: 80%)
 ) <plot_max_corr_100000>
 
 The histograms generated, especially for large $K$ (e.g., $K=10000$ and $K=100000$ as shown in @plot_max_corr_10000 and @plot_max_corr_100000, respectively), exhibit the distinct features of a Gumbel distribution:
