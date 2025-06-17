@@ -437,7 +437,7 @@ From @plot_complexity_mean_convergence, we can observe that:
 
 A $K$ value in the range of $10^3$ to $10^4$ is a good choice for this problem, providing a balance between a reliable statistical estimate and computational cost. As seen in the plot, there is very little difference in the mean between $K = 10^4$ and $K = 10^5$, yet the computational cost is ten times greater, indicating that choosing $K = 10^5$ is likely unnecessary for the purpose of estimating the mean.
 
-= Another Maximum Distribution
+= Analysis of Maximum Correlation for Varying Dimensions
 <section_another_maximum_distribution>
 
 Once more with:
@@ -446,7 +446,7 @@ $
   M_(m, n) = max_(i != j) abs(inner(A_i, A_j)) / (norm(A_i) norm(A_j)), A in RR^(m times n), A_(i j) ~ N(0, 1)
 $
 
-For every $(m, n) in RR^2$ we generated $K = 2500$ i.i.d realisations of $M_(m, n)$, using the parallel method shown previously and plotting a Gumbel fit on top of the histogram:
+For every $(m, n) in RR^2$ we generated $K = 2500$ (a decent estimation that balances runtime and precision, as seen in @section_complexity_convergence) i.i.d realisations of $M_(m, n)$, using the parallel method shown previously and plotting a Gumbel fit on top of the histogram:
 
 #grid(
   columns: (1fr, 1fr),
@@ -466,7 +466,7 @@ For every $(m, n) in RR^2$ we generated $K = 2500$ i.i.d realisations of $M_(m, 
     #image("images/max_corr_k2500_m200_x_n200.png", width: 100%)
   ],
   [
-    #image("images/max_corr_k2500_m200_x_n200.png", width: 100%)
+    #image("images/max_corr_k2500_m200_x_n600.png", width: 100%)
   ]
 )
 
@@ -481,7 +481,18 @@ For every $(m, n) in RR^2$ we generated $K = 2500$ i.i.d realisations of $M_(m, 
   ]
 )
 
-We know from @equation_normal_property that the distribution of $C_(i j) = inner(A_i, A_j) / (norm(A_i) norm(A_j))$ is approximately $N(0, 1/m)$. So taking the absolute value gives a folded normal distirbution that decays like $exp((-m phi^2) / 2)$.
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m1000_x_n1000.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m1000_x_n3000.png", width: 100%)
+  ]
+)
+
+We know from @equation_normal_property that the distribution of $C_(i j) = inner(A_i, A_j) / (norm(A_i) norm(A_j))$ is approximately $N(0, 1/m)$. So taking the absolute value gives a folded normal distribution that decays like $exp((-m phi^2) / 2)$.
 
 The maximum of $N = (n (n - 1)) / 2$ converges to a Gumbel law, as discussed in @section_maximum_distribution_theory. Hence every histogram has the same shape, a sharp mode with a  long tail, regardless of $(m, n)$. Only the 2 Gumbel parameters change:
 
@@ -501,15 +512,17 @@ $
   mu_(m, n) approx sigma sqrt(2 log N) = sqrt((2 log N) / m)
 $ <equation_rule_mu_growth>
 
-This equation rules how the mode $mu$ grows as a function of $(m, n)$. Fixing $m$ would lead to a logarithmic growth of $mu$, while fixing $n$ would lead to an exponential.
+These equations explain the trends visible in the plots. The mode $mu$ is influenced by two competing factors: it increases very slowly with the number of vectors ($n$, as $sqrt(ln n)$), but decreases more significantly with the dimension of the space ($m$, as $1/sqrt(m)$). This tells us that increasing dimensionality has a stronger effect on reducing the maximum correlation than increasing the number of vectors has on raising it.
 
 = Conclusion
 <section_conclusion>
 
-We conclude therefore that the non-orthogonality of a Gaussian matrix is governed by a competition between the number of vectors ($n$) and the dimension of the space ($m$):
+This report systematically investigated the geometric properties of random Gaussian matrices, confirming that their non-orthogonality is governed by a competition between the number of vectors ($n$) and the dimension of the space ($m$). We showed that the L2-norms of columns concentrate sharply around $sqrt(m)$ (Chi distribution), and that inner products between columns are approximately Normal, reflecting near-orthogonality in high dimensions. The maximum correlation, quantifying the greatest non-orthogonality, follows a Gumbel extreme value law, with parameters determined by $(m, n)$. 
 
-+ *Increasing the number of vectors* ($n$) for a fixed dimension ($m$) increases the maximum correlation expected.
++ *Increasing the number of vectors* ($n$) for a fixed dimension ($m$) increases the expected maximum correlation.
 
-+ *Increasing the dimension* ($m$) for a fixed number of vectors ($n$) decreases the maximum correlation expected.
++ *Increasing the dimension of the space* ($m$) decreases the expected maximum correlation, even when the number of vectors $n$ increases proportionally. That is, it has stronger effect in reducing the maximum correlation than increasing $n$ has in raising it.
+
+Thus, the "blessing of dimensionality" ensures that large random matrices, despite their randomness, exhibit highly predictable and quantifiable structure.
 
 #bibliography("bibliography.bib")
