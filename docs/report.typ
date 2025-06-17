@@ -334,7 +334,7 @@ $
 If a random variable $X ~ N(0, sigma^2)$, then $X/c ~ N(0, sigma^2/c^2)$. Thus:
 $
   C_(i j) approx N(0, m / m^2) = N(0, 1/m)
-$
+$ <equation_normal_property>
 So, the individual correlation values are approximately drawn from a normal distribution with mean 0 and a small variance of $1/m$.
 
 Our analysis, however, concerns the variable $M = max_(i!=j) |C_(i j)|$. The parent distribution is therefore not $N(0, 1/m)$, but rather its absolute value, $|N(0, 1/m)|$. This is known as a #link("https://en.wikipedia.org/wiki/Folded_normal_distribution")[*folded normal distribution*].
@@ -440,7 +440,76 @@ A $K$ value in the range of $10^3$ to $10^4$ is a good choice for this problem, 
 = Another Maximum Distribution
 <section_another_maximum_distribution>
 
+Once more with:
+
+$
+  M_(m, n) = max_(i != j) abs(inner(A_i, A_j)) / (norm(A_i) norm(A_j)), A in RR^(m times n), A_(i j) ~ N(0, 1)
+$
+
+For every $(m, n) in RR^2$ we generated $K = 2500$ i.i.d realisations of $M_(m, n)$, using the parallel method shown previously and plotting a Gumbel fit on top of the histogram:
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m100_x_n100.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m100_x_n300.png", width: 100%)
+  ]
+)
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m200_x_n200.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m200_x_n200.png", width: 100%)
+  ]
+)
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m500_x_n500.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m500_x_n1500.png", width: 100%)
+  ]
+)
+
+We know from @equation_normal_property that the distribution of $C_(i j) = inner(A_i, A_j) / (norm(A_i) norm(A_j))$ is approximately $N(0, 1/m)$. So taking the absolute value gives a folded normal distirbution that decays like $exp((-m phi^2) / 2)$.
+
+The maximum of $N = (n (n - 1)) / 2$ converges to a Gumbel law, as discussed in @section_maximum_distribution_theory. Hence every histogram has the same shape, a sharp mode with a  long tail, regardless of $(m, n)$. Only the 2 Gumbel parameters change:
+
+$
+  mu_(m, n) = sqrt((2 ln(N)) / m)\
+
+  beta_(m, n) = 1 / sqrt(2 m log N)
+$ <equation_gumbel_parameters>
+
+where $N = (n (n - 1)) / 2$ is the number of distinct pairs $(i, j)$.
+
+The derivation of $beta$ is analogous to the one for $mu$.
+
+One could note that the mode $mu$ moves as $m$ or $n$ are fixed. To better understand this. Set $N = (n (n - 1)) / 2$ and $sigma^2 = 1 / m$. With only the dominant terms in @equation_gumbel_parameters:
+
+$
+  mu_(m, n) approx sigma sqrt(2 log N) = sqrt((2 log N) / m)
+$ <equation_rule_mu_growth>
+
+This equation rules how the mode $mu$ grows as a function of $(m, n)$. Fixing $m$ would lead to a logarithmic growth of $mu$, while fixing $n$ would lead to an exponential.
+
 = Conclusion
 <section_conclusion>
+
+We conclude therefore that the non-orthogonality of a Gaussian matrix is governed by a competition between the number of vectors ($n$) and the dimension of the space ($m$):
+
++ *Increasing the number of vectors* ($n$) for a fixed dimension ($m$) increases the maximum correlation expected.
+
++ *Increasing the dimension* ($m$) for a fixed number of vectors ($n$) decreases the maximum correlation expected.
 
 #bibliography("bibliography.bib")
