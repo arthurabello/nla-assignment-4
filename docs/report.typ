@@ -306,8 +306,86 @@ The following plots are an expected output for the second cell of #link("https:/
 
 @plot_inner_100_10 $->$ @plot_inner_100_1000 shows that the distribution indeed approaches $N(0, 1)$
 
-= The Maximum Distribution
+= The Maximum Distribution (c)
 <section_maximum_distribution>
+
+In this section, we analyze the distribution of the maximum non-orthogonality between columns of a Gaussian matrix. This non-orthogonality is quantified by the maximum absolute value of the cosine similarity between any two distinct column vectors. Specifically, for a matrix $A in RR^(m times n)$, we study the distribution of the random variable:
+
+$
+  M = max_(i != j) (|inner(A_i, A_j)|) / (norm(A_i) norm(A_j))
+$ <eq_max_corr>
+
+Our experiment generates $K$ independent realizations of this value, $M_1, M_2, ..., M_K$, by creating $K$ different Gaussian matrices of size $m=100, n=300$. The histograms later shown in @section_maximum_distribution_histograms display the empirical probability density function of this collection of maxima.
+
+== Theoretical Framework and the Gumbel Distribution
+<section_maximum_distribution_theory>
+
+Let $C_(i j) = inner(A_i, A_j) / (norm(A_i) norm(A_j))$. For a given matrix $A$, we are examining the maximum of $N = n(n-1) / 2$ random variables, ${|C_(i j)|}_(1 <= i < j <= n)$. For $m=100$ and $n=300$, this is the maximum of $N = 44850$ values.
+
+We are interested in the maximum of ${|C_(i j)|}$.
+As established in previous sections:
+- From part (a) (@section_norm_distribution), for large $m$, $norm(A_i)$ concentrates around $sqrt(m)$.
+- From part (b) (@section_inner_products), $Z_(i j) = inner(A_i, A_j)$ is approximately $N(0, m)$.
+
+Let's first characterize the distribution of a single variable $C_(i j)$.
+$
+  C_(i j) = Z_(i j) / (norm(A_i) norm(A_j)) approx (N(0, m)) / (sqrt(m) dot sqrt(m)) = (N(0, m)) / m
+$
+If a random variable $X ~ N(0, sigma^2)$, then $X/c ~ N(0, sigma^2/c^2)$. Thus:
+$
+  C_(i j) approx N(0, m / m^2) = N(0, 1/m)
+$
+So, the individual correlation values are approximately drawn from a normal distribution with mean 0 and a small variance of $1/m$.
+
+Our analysis, however, concerns the variable $M = max_(i!=j) |C_(i j)|$. The parent distribution is therefore not $N(0, 1/m)$, but rather its absolute value, $|N(0, 1/m)|$. This is known as a #link("https://en.wikipedia.org/wiki/Folded_normal_distribution")[*folded normal distribution*].
+
+The tail of the folded normal distribution behaves identically to the tail of the underlying normal distribution. According to #link("https://en.wikipedia.org/wiki/Extreme_value_theory")[*Extreme Value Theory*], the limiting distribution for the maximum of many i.i.d. variables from a parent distribution with an exponential tail (like the normal distribution) is the #link("https://en.wikipedia.org/wiki/Gumbel_distribution")[*Gumbel distribution*.]
+
+The probability density function (PDF) for the Gumbel distribution is given by:
+$
+  f(x; mu, beta) = 1/beta e^(-(z + e^(-z)))\
+  z = (x - mu) / beta
+$
+where $mu$ is the mode of the distribution (location parameter) and $beta$ is the scale parameter (proportional to the standard deviation).
+
+== Analysis of the Histograms
+<section_maximum_distribution_histograms>
+
+#figure(
+  image("images/max_corr_100.png", width: 80%),
+) <plot_max_corr_100>
+
+#figure(
+  image("images/max_corr_500.png", width: 80%),
+) <plot_max_corr_500>
+
+#figure(
+  image("images/max_corr_1000.png", width: 80%),
+) <plot_max_corr_1000>
+
+#figure(
+  image("images/max_corr_10000.png", width: 80%),
+) <plot_max_corr_10000>
+
+The histograms generated, especially for large $K$ (e.g., $K=1000$ and $K=10000$ as shown in @plot_max_corr_1000 and @plot_max_corr_10000, respectively), exhibit the distinct features of a Gumbel distribution:
+- A single peak (unimodal).
+- Asymmetry with a more extended tail on the right side.
+
+As we can observe, growing $K$ _(number of trials)_ leads to a smoother plot and a clearer shape of the distribution, which aligns with the theoretical expectations of the Gumbel distribution.
+
+The observed mode of the distribution is around 0.43, which is consistent with theoretical predictions. The location parameter $mu$ can be approximated by:
+$
+  mu approx sqrt((2 ln(N)) / m) = sqrt((2 ln(n(n-1)/2)) / m)
+$
+This formula arises from the well-known approximation for the expected maximum of $N$ standard normal variables ($sqrt(2 ln N)$), applied to our standardized variables ${\|sqrt(m)C_(i j)\|}$.
+
+For $m=100$ and $n=300$, we have $N=44850$:
+$
+  mu approx sqrt((2 ln(44850)) / 100) approx sqrt((2 dot 10.71) / 100) = sqrt(0.214) approx 0.462
+$
+This theoretical approximation gives a value in the general vicinity of the observed peak (around 0.42). The discrepancy arises because the variables ${C_(i j)}$ are not perfectly independent (for instance, $C_(1,2)$ and $C_(1,3)$ both depend on column $A_1$) and their distribution is only approximately normal. Nonetheless, this formula correctly shows that the peak of the distribution is determined by the dimensions $m$ and $n$.
+
+In conclusion, the observed distribution is a *Gumbel distribution*. This arises because we are plotting the maximum of a very large number of approximately independent, normally-distributed random variables (#link("https://en.wikipedia.org/wiki/Cosine_similarity")[the cosine similarities]).
 
 = Complexity
 <section_complexity>
