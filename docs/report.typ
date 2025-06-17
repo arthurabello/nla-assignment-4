@@ -108,7 +108,7 @@ $
   sum_(i = 1)^m X_i^2 ~ chi_m^2
 $ <equation_normal_sum_is_chi>
 
-where $chi_m$ is the chi-squared distribution with $m$ degreees of freedom, better discussed in @section_chi_square_distribution.
+where $chi_m$ is the chi-squared distribution with $m$ degrees of freedom, better discussed in @section_chi_square_distribution.
 
 Taking the square root on @equation_normal_sum_is_chi, we have:
 
@@ -387,12 +387,55 @@ For $m=100$ and $n=300$, we have $N=44850$:
 $
   mu approx sqrt((2 ln(44850)) / 100) approx sqrt((2 dot 10.71) / 100) = sqrt(0.214) approx 0.462
 $
-This theoretical approximation gives a value in the general vicinity of the observed peak (around 0.42). The discrepancy arises because the variables ${C_(i j)}$ are not perfectly independent (for instance, $C_(1,2)$ and $C_(1,3)$ both depend on column $A_1$) and their distribution is only approximately normal. Nonetheless, this formula correctly shows that the peak of the distribution is determined by the dimensions $m$ and $n$.
+This theoretical approximation gives a value in the general vicinity of the observed peak (around 0.42). The discrepancy arises, and will be more evident when discussing convergence at @section_complexity_convergence, because the variables ${C_(i j)}$ are not perfectly independent (for instance, $C_(1,2)$ and $C_(1,3)$ both depend on column $A_1$) and their distribution is only approximately normal. Nonetheless, this formula correctly shows that the peak of the distribution is determined by the dimensions $m$ and $n$.
 
 In conclusion, the observed distribution is a *Gumbel distribution*. This arises because we are plotting the maximum of a very large number of approximately independent, normally-distributed random variables (#link("https://en.wikipedia.org/wiki/Cosine_similarity")[the cosine similarities]).
 
 = Complexity
 <section_complexity>
+
+== Algorithm Complexity and Runtime
+<section_complexity_runtime>
+
+The complexity of the algorithm is determined by the main operations within each of the $K$ iterations.
+
+The process begins by generating a Gaussian matrix of size $m times n$, which has a time complexity of $O(m n)$. We then calculate the L2-norm for $n$ columns of length $m$ using `norms = np.linalg.norm(A, axis=0)`, an operation with $O(m n)$ complexity. The most computationally expensive step is the calculation of the Gram Matrix via `G = A.T @ A`. This matrix multiplication of an $n$ x $m$ matrix with an $m$ x $n$ matrix has a complexity of $O(m n^2)$. Subsequent operations, including the outer product ($O(n^2)$), element-wise division ($O(n^2)$), and maximum extraction ($O(n^2)$), are less expensive.
+
+The total complexity for a single iteration is the sum of these steps, dominated by the Gram matrix calculation:
+$
+  &O(text("One Iteration")) = O(m n) + O(m n) + O(m n^2) + O(n^2) = O(m n^2)
+$
+Therefore, for $K$ iterations, the total complexity of our algorithm is $O(K m n^2)$. This implies that the runtime should scale linearly with $K$ and $m$, and quadratically with $n$. We can verify this empirically.
+
+#figure(
+  image("images/complexity_analysis.png", width: 100%),
+  caption: [
+    Runtime for varying $K$, $n$, and $m$
+  ]
+)<plot_complexity_analysis>
+
+As predicted, @plot_complexity_analysis confirms our theoretical model. The plots show that the runtime scales linearly with $K$ and $m$, and quadratically with $n$. This empirically verifies the algorithm's overall complexity.
+
+== Algorithm Convergence and Choosing an Appropriate K
+<section_complexity_convergence>
+
+The question _"What value of $K$ is good for a good estimate of the expected maximum?"_ is about statistical convergence, not computational performance. $K$ represents our sample size, which should be large enough to ensure our statistics (like the mean and the histogram's shape) are stable and reliable.
+
+To compute these maxima over many iterations (up to $K=10^5$), we used Multiprocessing. A simple way to visualize convergence is to plot the running average of the maximum correlation as $K$ increases. We expect this average to fluctuate for small $K$ and converge to a stable value as $K$ grows.
+
+#figure(
+  image("images/complexity_mean_convergence_parallel.png", width: 100%),
+  caption: [
+    Convergence of @eq_max_corr as $K$ grows
+  ]
+)<plot_complexity_mean_convergence>
+
+From @plot_complexity_mean_convergence, we can observe that:
+- For $K < 100$, the estimate is very noisy and unreliable.
+- For $100 <= K < 1000$, the estimate begins to stabilize, despite some minor yet visible fluctuations.
+- For $K >= 1000$, our estimate becomes very stable and converges smoothly to $approx 0.42$.
+
+A $K$ value in the range of $10^3$ to $10^4$ is a good choice for this problem, providing a balance between a reliable statistical estimate and computational cost. As seen in the plot, there is very little difference in the mean between $K = 10^4$ and $K = 10^5$, yet the computational cost is ten times greater, indicating that choosing $K = 10^5$ is likely unnecessary for the purpose of estimating the mean.
 
 = Another Maximum Distribution
 <section_another_maximum_distribution>
