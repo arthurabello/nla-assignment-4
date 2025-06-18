@@ -61,7 +61,10 @@
 
 #align(center)[
   *Abstract*\
-  _coming soon_
+
+We performed a computational study of $m times n$ real Gaussian matrices whose entries are i.i.d.\ $N(0,1)$. First, for increasing values of the ambient dimension $m$ (with $n = 1000$) we sampled the $2$-norm of each column and verified that the empirical histograms are well-approximated by the $chi_m$ distribution, converging to $sqrt(m)$.  
+Second, fixing $m = 100$ and letting $n$ vary from $10$ to $1000$, we examined all off-diagonal inner products; they converge to $N(0, m)$, confirming the classical central-limit prediction. Third, we estimated the *worst* non-orthogonality—the maximum absolute cosine similarity among every matrix's columns—over up to $K = 10^5$ independent realisations and showed that the resulting maxima follow a Gumbel law, in line with extreme-value theory. Finally, we derived and validated the algorithmic cost $O(m n^2)$ of this pipeline and quantified that $K approx 10^3$ already yields stable statistics.
+
 ]
 
 
@@ -71,6 +74,16 @@
 
 = Introduction
 <section_introduction>
+
+== From multivariate statistics to nuclear physics
+<section_from_multivariate_statistics_to_nuclear_physics>
+
+The systematic study of Gaussian random matrices #link("https://en.wikipedia.org/wiki/Wishart_distribution")[began with *John Wishart* ($1928$)], whose sample-covariance analysis produced the distribution that still underpins multivariate testing and Bayesian inference. Two decades later, #link("https://en.wikipedia.org/wiki/Wigner_semicircle_distribution")[*Eugene Wigner* introduced random matrices to model the energy levels of heavy nuclei], proving the celebrated semicircle law for their eigenvalue distribution. These twin origins—statistics and physics—sparked what is now called *Random Matrix Theory (RMT)*, whose cornerstones include the #link("https://arxiv.org/pdf/1003.2990")[Marchenko-Pastur law] for singular values of rectangular Gaussian matrices and sharp bounds on their extremes.
+
+== Modern applications
+<section_modern_applications>
+
+Random-matrix ideas now inform topics as diverse as numerical conditioning, wireless communication, portfolio theory and, most recently, *deep learning*. Which is why we study Gaussian matrices in this assignment, focusing on their non-orthogonality and the distribution of their inner products.
 
 = Norm Distribution (a)
 <section_norm_distribution>
@@ -261,8 +274,13 @@ $
   Z / sqrt(m) ~ N(0, 1)
 $
 
-With a fixed $m = 100$, when $n -> oo$ we can see the distribution approaching $N(0, 1)$, as shown in @section_inner_product_histograms
+And finally:
 
+$
+  Z ~ N(0, m)
+$ <final_inner_product_distribution>
+
+With a fixed $m = 100$, when $n -> oo$ we can see the distribution approaching $N(0, m)$, as shown in @section_inner_product_histograms
 
 == Histograms
 <section_inner_product_histograms>
