@@ -334,7 +334,7 @@ $
 If a random variable $X ~ N(0, sigma^2)$, then $X/c ~ N(0, sigma^2/c^2)$. Thus:
 $
   C_(i j) approx N(0, m / m^2) = N(0, 1/m)
-$
+$ <equation_normal_property>
 So, the individual correlation values are approximately drawn from a normal distribution with mean 0 and a small variance of $1/m$.
 
 Our analysis, however, concerns the variable $M = max_(i!=j) |C_(i j)|$. The parent distribution is therefore not $N(0, 1/m)$, but rather its absolute value, $|N(0, 1/m)|$. This is known as a #link("https://en.wikipedia.org/wiki/Folded_normal_distribution")[*folded normal distribution*].
@@ -352,23 +352,23 @@ where $mu$ is the mode of the distribution (location parameter) and $beta$ is th
 <section_maximum_distribution_histograms>
 
 #figure(
-  image("images/max_corr_100.png", width: 80%),
+  image("images/max_corr_k100_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_100>
 
 #figure(
-  image("images/max_corr_500.png", width: 80%),
+  image("images/max_corr_k500_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_500>
 
 #figure(
-  image("images/max_corr_1000.png", width: 80%),
+  image("images/max_corr_k1000_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_1000>
 
 #figure(
-  image("images/max_corr_10000.png", width: 80%),
+  image("images/max_corr_k10000_m100_x_n300.png", width: 80%),
 ) <plot_max_corr_10000>
 
 #figure(
-  image("images/max_corr_100000.png", width: 80%)
+  image("images/max_corr_k100000_m100_x_n300.png", width: 80%)
 ) <plot_max_corr_100000>
 
 The histograms generated, especially for large $K$ (e.g., $K=10000$ and $K=100000$ as shown in @plot_max_corr_10000 and @plot_max_corr_100000, respectively), exhibit the distinct features of a Gumbel distribution:
@@ -437,10 +437,92 @@ From @plot_complexity_mean_convergence, we can observe that:
 
 A $K$ value in the range of $10^3$ to $10^4$ is a good choice for this problem, providing a balance between a reliable statistical estimate and computational cost. As seen in the plot, there is very little difference in the mean between $K = 10^4$ and $K = 10^5$, yet the computational cost is ten times greater, indicating that choosing $K = 10^5$ is likely unnecessary for the purpose of estimating the mean.
 
-= Another Maximum Distribution
+= Analysis of Maximum Correlation for Varying Dimensions
 <section_another_maximum_distribution>
+
+Once more with:
+
+$
+  M_(m, n) = max_(i != j) abs(inner(A_i, A_j)) / (norm(A_i) norm(A_j)), A in RR^(m times n), A_(i j) ~ N(0, 1)
+$
+
+For every $(m, n) in RR^2$ we generated $K = 2500$ (a decent estimation that balances runtime and precision, as seen in @section_complexity_convergence) i.i.d realisations of $M_(m, n)$, using the parallel method shown previously and plotting a Gumbel fit on top of the histogram:
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m100_x_n100.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m100_x_n300.png", width: 100%)
+  ]
+)
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m200_x_n200.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m200_x_n600.png", width: 100%)
+  ]
+)
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m500_x_n500.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m500_x_n1500.png", width: 100%)
+  ]
+)
+
+#grid(
+  columns: (1fr, 1fr),
+  gutter: auto,
+  [
+    #image("images/max_corr_k2500_m1000_x_n1000.png", width: 100%)
+  ],
+  [
+    #image("images/max_corr_k2500_m1000_x_n3000.png", width: 100%)
+  ]
+)
+
+We know from @equation_normal_property that the distribution of $C_(i j) = inner(A_i, A_j) / (norm(A_i) norm(A_j))$ is approximately $N(0, 1/m)$. So taking the absolute value gives a folded normal distribution that decays like $exp((-m phi^2) / 2)$.
+
+The maximum of $N = (n (n - 1)) / 2$ converges to a Gumbel law, as discussed in @section_maximum_distribution_theory. Hence every histogram has the same shape, a sharp mode with a  long tail, regardless of $(m, n)$. Only the 2 Gumbel parameters change:
+
+$
+  mu_(m, n) = sqrt((2 ln(N)) / m)\
+
+  beta_(m, n) = 1 / sqrt(2 m log N)
+$ <equation_gumbel_parameters>
+
+where $N = (n (n - 1)) / 2$ is the number of distinct pairs $(i, j)$.
+
+The derivation of $beta$ is analogous to the one for $mu$.
+
+One could note that the mode $mu$ moves as $m$ or $n$ are fixed. To better understand this. Set $N = (n (n - 1)) / 2$ and $sigma^2 = 1 / m$. With only the dominant terms in @equation_gumbel_parameters:
+
+$
+  mu_(m, n) approx sigma sqrt(2 log N) = sqrt((2 log N) / m)
+$ <equation_rule_mu_growth>
+
+These equations explain the trends visible in the plots. The mode $mu$ is influenced by two competing factors: it increases very slowly with the number of vectors ($n$, as $sqrt(ln n)$), but decreases more significantly with the dimension of the space ($m$, as $1/sqrt(m)$). This tells us that increasing dimensionality has a stronger effect on reducing the maximum correlation than increasing the number of vectors has on raising it.
 
 = Conclusion
 <section_conclusion>
+
+This report systematically investigated the geometric properties of random Gaussian matrices, confirming that their non-orthogonality is governed by a competition between the number of vectors ($n$) and the dimension of the space ($m$). We showed that the L2-norms of columns concentrate sharply around $sqrt(m)$ (Chi distribution), and that inner products between columns are approximately Normal, reflecting near-orthogonality in high dimensions. The maximum correlation, quantifying the greatest non-orthogonality, follows a Gumbel extreme value law, with parameters determined by $(m, n)$. 
+
++ *Increasing the number of vectors* ($n$) for a fixed dimension ($m$) increases the expected maximum correlation.
+
++ *Increasing the dimension of the space* ($m$) decreases the expected maximum correlation, even when the number of vectors $n$ increases proportionally. That is, it has stronger effect in reducing the maximum correlation than increasing $n$ has in raising it.
+
+Thus, the "blessing of dimensionality" ensures that large random matrices, despite their randomness, exhibit highly predictable and quantifiable structure.
 
 #bibliography("bibliography.bib")
