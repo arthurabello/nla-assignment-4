@@ -19,7 +19,6 @@ All derivations and detailed discussion live in **[`docs/report.pdf`](./docs/rep
 4. [Running the Analyses](#running-the-analyses)  
 5. [Testing](#testing)  
 6. [License](#license)
-
 ---
 
 ## Project Overview
@@ -47,7 +46,6 @@ Python scripts under `src/` handle steps 1–2; Matplotlib/Seaborn manage step 3
 ├── LICENSE
 └── README.md  
 ````
-
 ---
 
 ## Quick Start
@@ -60,16 +58,15 @@ python -m venv .venv && source .venv/bin/activate
 # 2) install requirements
 pip install -r requirements.txt
 ````
-
 ---
 
 ## Running the Script
 
-Go to the [Jupyter Notebook]()
+Go to the [Jupyter Notebook](./src/assignment.ipynb) and run all cells
 
 ## License
 
-Distributed under the MIT License – see [`LICENSE`](./LICENSE) for details.
+See [`LICENSE`](./LICENSE) for details.
 
 ---
 
