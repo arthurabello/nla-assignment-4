@@ -1,71 +1,80 @@
 # Random Matrices Study
 
-> Numerical Linear Algebra – **Assignment 4** *(2025)*  
-> [![Build Status](https://img.shields.io/badge/status-WIP-lightgrey)](#)
+> Numerical Linear Algebra – **Assignment 4** (2025)  
+> [![Build Status](https://img.shields.io/badge/status-cool-lightgrey)](#)
 
-A **work-in-progress** repo that will generate, sample and analyse Gaussian random
-matrices to showcase high-dimensional phenomena—norm concentration,
-inner-product distributions, and worst-case coherence.  
-All theory lives in **[`report.pdf`](./docs/report.pdf)**; this README only covers the *practical* bits.
+This project numerically explores high-dimensional phenomena in **Gaussian random matrices**:
 
+* **Norm concentration** — how ‖ · ‖₂ of *N*(0, 1) vectors collapses around √m.  
+* **Inner-product behaviour** — empirical convergence to *N*(0, 1) after normalisation.  
+* **Worst-case coherence** — (Gumbel) law for the maximum column correlation.
+
+All derivations and detailed discussion live in **[`docs/report.pdf`](./docs/report.pdf)**
 ---
 
 ## 📋 Table of Contents
 1. [Project Overview](#project-overview)  
-2. [Structure](#structure)  
-3. [Setup](#setup)  
-4. [Running the Scripts](#running-the-scripts)  
+2. [Repository Structure](#repository-structure)  
+3. [Quick Start](#quick-start)  
+4. [Running the Analyses](#running-the-analyses)  
 5. [Testing](#testing)  
 6. [License](#license)
 
 ---
 
 ## Project Overview
+The workflow is intentionally simple:
 
-(uga buga)
+1. **Generate** an *m × n* Gaussian matrix (or many of them in parallel).  
+2. **Sample** the statistic of interest (norms, inner products, or maximum correlation).  
+3. **Plot** histograms against the corresponding theoretical density.  
 
+Python scripts under `src/` handle steps 1–2; Matplotlib/Seaborn manage step 3
 ---
 
-## Structure
-```
-uga buga
+## Repository Structure
+
+```bash
+├── docs/
+│   ├── images/            #auto-generated plots land here
+│   ├── bibliography.bib   #references for the report
+│   ├── report.pdf         #final write-up
+│   └── report.typ         #Typst source
+├── src/
+│   └── assignment.ipynb   #step-by-step exploration
+├── written_assignment.pdf #original problem statement
+├── requirements.txt    
+├── LICENSE
+└── README.md  
 ````
 
 ---
 
-## Prerequisites
-
+## Quick Start
 ```bash
-uga buga
+# 1) clone and create an isolated env (Python ≥ 3.11)
+git clone https://github.com/arthurabello/nla-assignment-4.git
+cd nla-assignment-4
+python -m venv .venv && source .venv/bin/activate
+
+# 2) install requirements
+pip install -r requirements.txt
 ````
 
 ---
 
-## Running the Scripts
+## Running the Script
 
-```bash
-uga buga
-```
-
----
-
-## Testing
-
-```bash
-uga buga
-```
-
----
+Go to the [Jupyter Notebook]()
 
 ## License
 
-See the [license file](./LICENSE) for details
+Distributed under the MIT License – see [`LICENSE`](./LICENSE) for details.
 
-## Authors
+---
 
-1. **[Arthur Rabello Oliveira](https://github.com/arthurabello)**
-2. **[Henrique Coelho Beltrão](https://github.com/riqueu)**
+### Authors
 
-
-
+* **[Arthur Rabello Oliveira](https://github.com/arthurabello)**
+* **[Henrique Coelho Beltrão](https://github.com/riqueu)**
 
