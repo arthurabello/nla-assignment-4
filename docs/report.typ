@@ -542,5 +542,3 @@ This report systematically investigated the geometric properties of random Gauss
 + *Increasing the dimension of the space* ($m$) decreases the expected maximum correlation, even when the number of vectors $n$ increases proportionally. That is, it has stronger effect in reducing the maximum correlation than increasing $n$ has in raising it.
 
 Thus, the "blessing of dimensionality" ensures that large random matrices, despite their randomness, exhibit highly predictable and quantifiable structure.
-
-#bibliography("bibliography.bib")
