@@ -49,7 +49,7 @@
 #let int = $integral$
 
 #align(center, text(20pt)[
- * Assignment 3 - Numerical Linear Algebra*
+ * Assignment 4 - Numerical Linear Algebra*
 ])
 
 #align(center, text(15pt)[
