@@ -437,23 +437,67 @@ As predicted, @plot_complexity_analysis confirms our theoretical model. The plot
 == Algorithm Convergence and Choosing an Appropriate K
 <section_complexity_convergence>
 
-The question _"What value of $K$ is good for a good estimate of the expected maximum?"_ is about statistical convergence, not computational performance. $K$ represents our sample size, which should be large enough to ensure our statistics (like the mean and the histogram's shape) are stable and reliable.
+The question _"What value of $K$ is good for a good estimate of the expected maximum?"_ is about statistical convergence. $K$ represents our sample size, which must be large enough for our statistics (like the mean and the histogram's shape) to be stable and reliable.
 
+We first examine this convergence for the baseline case of $(m=100, n=300)$.
 To compute these maxima over many iterations (up to $K=10^5$), we used Multiprocessing. A simple way to visualize convergence is to plot the running average of the maximum correlation as $K$ increases. We expect this average to fluctuate for small $K$ and converge to a stable value as $K$ grows.
 
 #figure(
-  image("images/complexity_mean_convergence_parallel.png", width: 100%),
+  image("images/complexity_mean_convergence_parallel_k100000_m100_n300.png", width: 100%),
   caption: [
-    Convergence of @eq_max_corr as $K$ grows
+    Convergence of @eq_max_corr as $K$ grows to $10^5$ with $(m,n) = (100,300)$
   ]
-)<plot_complexity_mean_convergence>
+)<plot_complexity_mean_convergence_100_300>
 
-From @plot_complexity_mean_convergence, we can observe that:
+From @plot_complexity_mean_convergence_100_300, we can observe that, for this specific case of $(m=100, n=300)$, the mean of the maximum correlation converges to approximately $0.42$ as $K$ increases. The convergence can be summarized as follows:
 - For $K < 100$, the estimate is very noisy and unreliable.
 - For $100 <= K < 1000$, the estimate begins to stabilize, despite some minor yet visible fluctuations.
 - For $K >= 1000$, our estimate becomes very stable and converges smoothly to $approx 0.42$.
 
-A $K$ value in the range of $10^3$ to $10^4$ is a good choice for this problem, providing a balance between a reliable statistical estimate and computational cost. As seen in the plot, there is very little difference in the mean between $K = 10^4$ and $K = 10^5$, yet the computational cost is ten times greater, indicating that choosing $K = 10^5$ is likely unnecessary for the purpose of estimating the mean.
+A $K$ value in the range of $10^3$ to $10^4$ is therefore a good choice for this specific problem. However, the rate of convergence for other pairs $(m,n)$ may differ. The convergence speed depends on the variance of the underlying Gumbel distribution, which is proportional to the square of its scale parameter, $beta$. This parameter can be derived from established results in Extreme Value Theory.
+
+The derivation begins with the known asymptotic scale parameter for the maximum of $N$ standard normal variables, $beta_N approx 1/sqrt(2 ln N)$. In our case, the standardized variables are $Y_(i j) = sqrt(m)C_(i j) ~ N(0, 1)$. Since our variable of interest, $M = max|C_(i j)|$, is scaled by a factor of $1/sqrt(m)$ relative to the maximum of the standardized variables, the scale parameter is also scaled by this factor:
+$
+  beta_(m, n) = beta_N / sqrt(m) approx (1 / sqrt(2 ln N)) / sqrt(m) = 1 / sqrt(2 m ln(N))
+$
+This result implies that the variance is inversely proportional to $m ln(n)$. This leads to the prediction that distributions for larger $(m,n)$ pairs, having smaller variance, should converge more rapidly.
+
+#figure(
+  image("images/complexity_mean_convergence_parallel_k10000_m500_n1500.png", width: 100%),
+  caption: [
+    Convergence of @eq_max_corr as $K$ grows to $10^4$ with $(m,n) = (500,1500)$
+  ]
+)<plot_complexity_mean_convergence_500_1500>
+
+In @plot_complexity_mean_convergence_500_1500, we observe a similar convergence pattern for $(m=500, n=1500)$, but with a more rapid stabilization of the mean. The fluctuations are smaller, and the mean converges to $approx 0.22$.
+
+There are two paths we can take to ensure convergence:
+=== Method 1: Adaptive K
+<method_adaptive_k>
+One could design an algorithm that stops once the running mean has stabilized. For instance, it could monitor the standard deviation of the running average over a recent window of trials and halt when this stability metric falls below a set tolerance.
+
+- *Pros:* This approach is computationally efficient, performing only the necessary number of trials for each case. A clear advantage is that it adapts to the specific convergence behavior of each $(m,n)$ pair, ensuring each pair has a "good enough" $K$ with a clean stopping criterion.
+- *Cons:* It introduces new arbitrary parameters (the window size and the tolerance threshold, and justifying those can become just as arbitrary as justifying a fixed $K$) and its sequential nature makes it difficult to parallelize efficiently.
+
+=== Method 2: Fixed K
+<method_fixed_k>
+The second approach is to select a single, fixed, and sufficient value of $K$ for all experiments.
+
+- *Pros:* This method is simple to implement, easily parallelizable (as the number of tasks is known beforehand), and ensures all results are directly comparable under identical sampling conditions. By choosing a $K$ that is sufficient for our "noisiet" case, we can guarantee that all other cases are also more than sufficiently sampled. There is no doubt about the statistical stability of any of your results.
+- *Cons:* It is less computationally efficient, as it may "over-sample" cases that converge quickly.
+
+The main goal of this project is to analyze and report on the statistical properties of random matrices, not to develop or showcase the most efficient simulation algorithm., hence why, for this project, we chose Method 2. The key is to select a $K$ based on a "worst-case" or slower-converging scenario. Since the smaller $(m,n)$ pairs are more variable, a $K$ value that is sufficient for them will be more than adequate for all larger, more stable pairs. A choice of $K=2500$ was therefore selected as a robust value that guarantees all our experiments are well-converged and our comparisons are statistically sound. It also produces results that are easier to interpret and compare across different $(m,n)$ pairs. This value of $K$ is sufficient to ensure convergence for the more variable cases (like $(m=100, n=300) #text("and") (m=100, n=100)$) and is more than adequate for all other pairs $(m,n)$ we tested.
+
+This justifies our choice of a fixed $K=2500$ for the final experiments, as this value is sufficient for the more variable cases and thus more than adequate for all others. Nonetheless, the method of adaptive $K$ is a valid alternative and was also implemented in the notebook, allowing users to explore convergence behavior interactively. Here is the distribution of the maximum correlation for $(m,n) = (100,100)$, using the adaptive method with a window size of 25 and a tolerance of $10^(-5)$:
+#figure(
+  image("images/max_corr_k2135_m100_x_n100.png", width: 80%),
+  caption: [
+    Distribution of @eq_max_corr for $(m,n) = (100,100)$. $#text("window")=25 #text("tolerance")=10^(-5)$
+  ]
+)<plot_max_corr_adaptive_100_100>
+
+For this case, the adaptive method stopped after $K=2135$ iterations. All other pairs $(m,n)$ should therefore converge with a similar or smaller $K$.
+
 
 = Analysis of Maximum Correlation for Varying Dimensions
 <section_another_maximum_distribution>
@@ -464,7 +508,9 @@ $
   M_(m, n) = max_(i != j) abs(inner(A_i, A_j)) / (norm(A_i) norm(A_j)), A in RR^(m times n), A_(i j) ~ N(0, 1)
 $
 
-For every $(m, n) in RR^2$ we generated $K = 2500$ (a decent estimation that balances runtime and precision, as seen in @section_complexity_convergence) i.i.d realisations of $M_(m, n)$, using the parallel method shown previously and plotting a Gumbel fit on top of the histogram:
+Having established that the maximum correlation follows a Gumbel distribution @section_maximum_distribution and determined a robust methodology for sampling it @section_complexity_convergence, we now broaden our investigation. This section analyzes how the parameters of the Gumbel distribution change for various matrix dimensions, revealing the interplay between the ambient dimension, $m$, and the number of vectors, $n$.
+
+For each pair $(m, n)$, we generated $K = 2500$ i.i.d. realizations of $M_(m, n)$. As established in @section_complexity_convergence, this fixed number of trials ensures that our results are statistically robust and directly comparable across all configurations. However, if you are interested in seeing the results of the adaptive method at @method_adaptive_k, they can be found at the second to last cell of #link("https://github.com/arthurabello/nla-assignment-4/blob/main/src/assignment.ipynb")[the notebook]. The parallel method was used for these computations, and a Gumbel distribution was fitted to each resulting histogram:
 
 #grid(
   columns: (1fr, 1fr),
